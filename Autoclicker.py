@@ -1,14 +1,23 @@
-# from tkinter import *
-# from tkinter import messagebox
-import pyautogui
+import tkinter as tk
+from pynput import keyboard, mouse
+from pynput.mouse import Button, Controller
+import time
 
-top = Tk()
+top = tk.Tk()
 top.resizable(False,False)
 
-def helloCallBack():
-    pyautogui.click()
-    print("this")
-   
-B = Button(top, text ="Hello", command = helloCallBack)
-B.place(x=50,y=50)
-top.mainloop()
+mouse = Controller()
+playing = False
+
+def click(event = None):
+    global playing
+    playing = not playing
+    print(playing)
+    while playing:
+        mouse.click(Button.left)
+        print("Clicked")
+        time.sleep(1)
+        
+top.bind("<space>", click)
+
+top.mainloop() 
