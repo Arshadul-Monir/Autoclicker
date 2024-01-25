@@ -1,37 +1,35 @@
 import pygame
-from pynput import keyboard
+from pynput import keyboard, mouse
 from pynput.mouse import Button, Controller
 import time
 
-# Initialize GUI
 screen = pygame.display.set_mode((500, 500))
-
-# Global toggler variable
+clock = pygame.time.Clock()
 playing = False
 
-# Function to compare keypress with hotkey and toggles if matches
-def toggle(key):
-    global playing
-    if key == keyboard.Key.space:
-        playing = not playing
+# Define a variable to keep track of the key state
+key_pressed = False
 
-# Starts key listener
-keyboard_listener = keyboard.Listener(on_press=toggle)
+# Define a callback function for key press
+def on_press(key):
+    global key_pressed
+    if key == keyboard.Key.space:
+        key_pressed = not key_pressed
+
+# Start the keyboard listener
+keyboard_listener = keyboard.Listener(on_press=on_press)
 keyboard_listener.start()
 
-# Main loop
 while True:
-    # Closing program
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
 
-    # Continues clicking while global variable is set to true
-    if playing:
+    if key_pressed:
         Controller().click(Button.left)
         time.sleep(1)
         print("Clicked")
-    
-    # Updates display
+
     pygame.display.flip()
+    clock.tick(60)
