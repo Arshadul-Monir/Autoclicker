@@ -4,44 +4,55 @@ from pynput.mouse import Button, Controller
 import time
 import threading
 
-class GUI:
-    def __init__(self):
-        # Instance variables
-        self.playing = False
-        
-        self.root = tk.Tk()
-        self.root.geometry(f'{400}x{400}+{(self.root.winfo_screenwidth() - 400) // 2}+{(self.root.winfo_screenheight() - 400) // 2}')
-        
-        self.keyboard_listener = keyboard.Listener(on_press = self.toggle)
-        self.keyboard_listener.start()
-        
-        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
-        self.root.mainloop()
+# Global variables
+playing = False
+cps = 10
 
-    
-    def click(self):
-        # Continues clicking while global variable is set to true
-        while self.playing:
-            Controller().click(Button.left)
-            print("Clicked")
-            time.sleep(2)
- 
-            
 
-    # Function to compare keypress with hotkey and toggles if matches
-    def toggle(self,key):
-        print(key)
-        if key == keyboard.Key.space:
-            self.playing = not self.playing 
-            listen_thread = threading.Thread(target=self.click)
-            listen_thread.start()
-            
-    
-    
-    def on_close(self):
-        self.keyboard_listener.stop()
-        self.root.destroy()
+def click():
+    global cps
+    # Continues clicking while global variable is set to true
+    while playing:
+        Controller().click(Button.left)
+        print("Clicked")
+        time.sleep(1/cps)
+
         
-        
-clicker = GUI()
+
+# Function to compare keypress with hotkey and toggles if matches
+def toggle(key):
+    global playing
+    print(key, not playing)
+    if key == keyboard.Key.space:
+        playing = not playing 
+        listen_thread = threading.Thread(target=click)
+        listen_thread.start()
+
+def submit_speed():
+    global cps
+    try:
+        cps = int(speed.get())
+    except ValueError:
+        print("Invalid input. Please enter a valid number for CPS.")
+
+def on_close():
+    root.destroy()
+    keyboard_listener.stop()    
+
+root = tk.Tk()
+root.geometry(f'{400}x{400}+{(root.winfo_screenwidth() - 400) // 2}+{(root.winfo_screenheight() - 400) // 2}')
+speed = tk.Entry()
+speed.pack()
+speed_button = tk.Button(root, text = "Submit CPS", command = submit_speed)
+speed_button.pack()
+root.protocol("WM_DELETE_WINDOW", on_close)
+
+
+keyboard_listener = keyboard.Listener(on_press = toggle)
+keyboard_listener.start()
+
+root.mainloop()
+
+
+
