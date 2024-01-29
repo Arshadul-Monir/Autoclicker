@@ -8,14 +8,16 @@ class GUI:
     def __init__(self):
         # Instance variables
         self.playing = False
-        # self.listen_thread = None
         
-        root = tk.Tk()
-        root.geometry(f'{400}x{400}+{(root.winfo_screenwidth() - 400) // 2}+{(root.winfo_screenheight() - 400) // 2}')
+        self.root = tk.Tk()
+        self.root.geometry(f'{400}x{400}+{(self.root.winfo_screenwidth() - 400) // 2}+{(self.root.winfo_screenheight() - 400) // 2}')
         
-        keyboard_listener = keyboard.Listener(on_press = self.toggle)
-        keyboard_listener.start()
-        root.mainloop()
+        self.keyboard_listener = keyboard.Listener(on_press = self.toggle)
+        self.keyboard_listener.start()
+        
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+
+        self.root.mainloop()
 
     
     def click(self):
@@ -23,7 +25,7 @@ class GUI:
         while self.playing:
             Controller().click(Button.left)
             print("Clicked")
-            time.sleep(1/100)
+            time.sleep(2)
  
             
 
@@ -37,8 +39,9 @@ class GUI:
             
     
     
-    def __del__(self):
-        keyboard.Listener.stop()
+    def on_close(self):
+        self.keyboard_listener.stop()
+        self.root.destroy()
         
         
 clicker = GUI()
