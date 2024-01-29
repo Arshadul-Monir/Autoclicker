@@ -9,7 +9,6 @@ import threading
 playing = False
 cps = 10
 
-
 def click():
     global cps
     # Continues clicking while global variable is set to true
@@ -19,16 +18,12 @@ def click():
         if cps != 0:
             time.sleep(1/cps)
 
-        
 
-# Function to compare keypress with hotkey and toggles if matches
-def toggle(key):
-    global playing
-    print(key, not playing)
-    if key == keyboard.Key.space:
-        playing = not playing 
-        listen_thread = threading.Thread(target=click)
-        listen_thread.start()
+# Stops the listener and closes the window
+def on_close():
+    keyboard_listener.stop()  
+    root.destroy()
+
 
 # Sets clicking speed when submit button is pressed
 def submit_speed():
@@ -38,14 +33,20 @@ def submit_speed():
     except ValueError:
         print("Invalid input. Please enter a valid number for CPS.")
 
-# Stops the listener and closes the window
-def on_close():
-    keyboard_listener.stop()  
-    root.destroy()
+
+# Function to compare keypress with hotkey and toggles if matches
+def toggle(key):
+    global playing
+    print(key, not playing)
+    if key == keyboard.Key.space:
+        playing = not playing 
+        listen_thread = threading.Thread(target=click)
+        listen_thread.start()
     
 # Returns if entry if integer for speed input field
 def validate(P):
     return P.isdigit() or P == ""
+
 
 root = tk.Tk()
 root.title("Auto Clicker")
@@ -72,6 +73,3 @@ keyboard_listener = keyboard.Listener(on_press = toggle)
 keyboard_listener.start()
 
 root.mainloop()
-
-
-
