@@ -16,7 +16,8 @@ def click():
     while playing:
         Controller().click(Button.left)
         print("Clicked")
-        time.sleep(1/cps)
+        if cps != 0:
+            time.sleep(1/cps)
 
         
 
@@ -43,13 +44,25 @@ def on_close():
     root.destroy()
     
 # Returns if entry if integer for speed input field
-def num_entry(P):
-    return P.isdigit()
+def validate(P):
+    return P.isdigit() or P == ""
 
 root = tk.Tk()
+root.title("Auto Clicker")
+
 root.geometry(f'{400}x{400}+{(root.winfo_screenwidth() - 400) // 2}+{(root.winfo_screenheight() - 400) // 2}')
-speed = tk.Entry()
-speed.pack()
+frame = tk.Frame(root, padx=10, pady=10)
+frame.pack(padx=10, pady=10)
+
+instructions_label = tk.Label(frame, text="Press the spacebar to toggle auto-clicking")
+instructions_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
+
+speed_label = tk.Label(frame, text="Clicks per Second (CPS):")
+speed_label.grid(row=1, column=0, sticky="E", pady=(0, 10))
+
+speed = tk.Entry(frame, validate='all', validatecommand=(frame.register(validate), '%P'))
+speed.grid(row=1, column=1, pady=(0, 10))
+
 speed_button = tk.Button(root, text = "Submit CPS", command = submit_speed)
 speed_button.pack()
 root.protocol("WM_DELETE_WINDOW", on_close)
