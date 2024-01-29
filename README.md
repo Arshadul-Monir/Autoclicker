@@ -6,3 +6,4 @@ Future plans:
 - Allow color tracking and clicking
 - Click recording
 - Better UI
+- Integer only input field for speed
