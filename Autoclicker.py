@@ -29,6 +29,7 @@ def toggle(key):
         listen_thread = threading.Thread(target=click)
         listen_thread.start()
 
+# Sets clicking speed when submit button is pressed
 def submit_speed():
     global cps
     try:
@@ -36,9 +37,14 @@ def submit_speed():
     except ValueError:
         print("Invalid input. Please enter a valid number for CPS.")
 
+# Stops the listener and closes the window
 def on_close():
+    keyboard_listener.stop()  
     root.destroy()
-    keyboard_listener.stop()    
+    
+# Returns if entry if integer for speed input field
+def num_entry(P):
+    return P.isdigit()
 
 root = tk.Tk()
 root.geometry(f'{400}x{400}+{(root.winfo_screenwidth() - 400) // 2}+{(root.winfo_screenheight() - 400) // 2}')
