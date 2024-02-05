@@ -7,7 +7,7 @@ Press spacebar to toggle clicker on and off
 Future plans:
 - ~~Integer only input field for speed~~
 - Add keybind chooser for speed
-- Limit CPS (maybe)
+- ~~Limit CPS (maybe)~~
 - Choose position to click
 - Option for random click intervals rather than fixed
 - Click counter
